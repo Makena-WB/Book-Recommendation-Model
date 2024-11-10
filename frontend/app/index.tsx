@@ -4,19 +4,12 @@ import { StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text>ShelfScape</Text>
+    <View className="flex-1 items-center justify-center bg-white">
+      <Text className="text-3xl">ShelfScape</Text>
       <StatusBar style="auto"/>
       <Link href={"/profile"} style={{ color: 'blue'}}>Go to Profile</Link>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-});
+
