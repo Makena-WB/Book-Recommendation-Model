@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "frontend",
-    "slug": "frontend",
+    "name": "ShelfScape",
+    "slug": "shelfscape",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "ShelfScape",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
