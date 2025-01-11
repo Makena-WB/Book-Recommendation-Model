@@ -1,26 +1,30 @@
 import numpy as np
 import streamlit as st
 import pandas as pd
+import sys
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+from surprise import Reader, Dataset, SVD
+
+sys.path.append(r'C:\Users\Administrator\ShelfScape2.0\Book-Recommendation-Model\venv\Lib\site-packages')
+
 
 # collaborative filtering works perfectly on local
-from surprise import Reader, Dataset, SVD
 
 
 # data loading
-@st.cache()
+@st.cache_data()
 def read_book_data():
-    return pd.read_csv('../data/books_trimmed.csv')
+    return pd.read_csv('data/books_trimmed.csv')
 
 
-@st.cache()
+@st.cache_data()
 def read_ratings_data():
     return pd.read_csv('data/ratings.csv')
 
 
-@st.cache()
+@st.cache_resource()
 def content(Books):
     Books['content'] = (pd.Series(Books[['authors', 'title', 'genres', 'description']]
                                   .fillna('')
@@ -30,16 +34,16 @@ def content(Books):
     tf_content = TfidfVectorizer(analyzer='word', ngram_range=(1, 2), min_df=0, stop_words='english')
     tfidf_matrix = tf_content.fit_transform(Books['content'])
     cosine = linear_kernel(tfidf_matrix, tfidf_matrix)
-    index = pd.Series(books.index, index=Books['title'])
+    index = pd.Series(Books.index, index=Books['title'])
 
     return cosine, index
 
 
 def simple_recommender(Books, n=5):
-    v = books['ratings_count']
-    m = books['ratings_count'].quantile(0.95)
-    R = books['average_rating']
-    C = books['average_rating'].median()
+    v = Books['ratings_count']
+    m = Books['ratings_count'].quantile(0.95)
+    R = Books['average_rating']
+    C = Books['average_rating'].median()
     score = (v / (v + m) * R) + (m / (m + v) * C)
     Books['score'] = score
 
@@ -54,7 +58,8 @@ def content_recommendation(Books, title, n=5):
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
     sim_scores = sim_scores[1:n + 1]
     book_indices = [i[0] for i in sim_scores]
-    return Books[['book_id', 'title', 'authors', 'genre', 'small_image_url', 'average_rating', 'ratings_count']].iloc[book_indices]
+    return Books[['book_id', 'title', 'authors', 'genre', 'small_image_url', 'average_rating', 'ratings_count']].iloc[
+        book_indices]
 
 
 def improved_recommendation(Books, title, n=5):
@@ -64,7 +69,8 @@ def improved_recommendation(Books, title, n=5):
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
     sim_scores = sim_scores[1:26]
     book_indices = [i[0] for i in sim_scores]
-    books2 = books.iloc[book_indices][['book_id', 'title', 'authors', 'genre', 'small_image_url', 'average_rating', 'ratings_count']]
+    books2 = Books.iloc[book_indices][
+        ['book_id', 'title', 'authors', 'genre', 'small_image_url', 'average_rating', 'ratings_count']]
 
     v = books2['ratings_count']
     m = books2['ratings_count'].quantile(0.75)  # here the minimum rating is quantile 75
@@ -75,27 +81,28 @@ def improved_recommendation(Books, title, n=5):
     high_rating = books2[books2['ratings_count'] >= m]
     high_rating = high_rating.sort_values('weighted_rating', ascending=False)
 
-    return high_rating[['book_id', 'title', 'authors', 'genre', 'small_image_url', 'average_rating', 'ratings_count']].head(n)
+    return high_rating[
+        ['book_id', 'title', 'authors', 'genre', 'small_image_url', 'average_rating', 'ratings_count']].head(n)
 
 
-def book_read(books, ratings_data, user_id):
-    """Take user_id and return list of book that user has read"""
+"""def book_read(books, ratings_data, user_id):
+    Take user_id and return list of book that user has read
     books_list = list(books['book_id'])
     book_read_list = list(ratings['book_id'][ratings_data['user_id'] == user_id])
     return books_list, book_read_list
 
 
 def get_recommendation_svd(books, ratings_data, user_id, n=5):
-    """Give n recommendation to user_id"""
-#
+    Give n recommendation to user_id
+    #
     all_books, user_books = book_read(books, ratings, user_id)
     next_books = [book for book in all_books if book not in user_books]
-#
+    #
     reader = Reader(rating_scale=(1, 5))
     data = Dataset.load_from_df(ratings, reader)
     svd = SVD(random_state=0, n_epochs=30, lr_all=0.005, reg_all=0.04)
     svd.fit(data.build_full_trainset())
-#
+    #
     if n <= len(next_books):
         ratings = []
         for book in next_books:
@@ -103,10 +110,11 @@ def get_recommendation_svd(books, ratings_data, user_id, n=5):
             ratings.append((book, est))
         ratings = sorted(ratings, key=lambda x: x[1], reverse=True)
         book_ids = [id_ for id_, rate in ratings[:n]]
-        return books[books.book_id.isin(book_ids)][['book_id', 'title', 'authors', 'small_image_url', 'average_rating', 'ratings_count']]
+        return books[books.book_id.isin(book_ids)][
+            ['book_id', 'title', 'authors', 'small_image_url', 'average_rating', 'ratings_count']]
     else:
         print('Please reduce your recommendation request')
-
+"""
 
 # App declaration
 def main():
