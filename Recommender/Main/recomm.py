@@ -10,10 +10,10 @@ def recom(books_user_likes):
 	def get_index_from_title(Title):
 		return df[df.Title == Title]["index"].values[0]
 
-	books = pd.read_csv(r"C:\Users\Administrator\Recommender\BOOK-RECOMMENDER-main\BookDataset\Books.csv")
+	books = pd.read_csv(r"C:\Users\Administrator\ShelfScape2.0\Book-Recommendation-Model\Recommender\BookDataset\Books.csv")
 	books=books[:1000]
 	df=books
-	img=pd.read_csv(r"C:\Users\Administrator\Recommender\BOOK-RECOMMENDER-main\BookDataset\Images.csv")
+	img=pd.read_csv(r"C:\Users\Administrator\ShelfScape2.0\Book-Recommendation-Model\Recommender\BookDataset\Images.csv")
 
 
 	features = ['Title','Author','Publisher']
@@ -77,8 +77,8 @@ def recom(books_user_likes):
 
 
 def bookdisp():
-	books=pd.read_csv(r"C:\Users\Administrator\Recommender\BOOK-RECOMMENDER-main\BookDataset\Books.csv")
-	img=pd.read_csv(r"C:\Users\Administrator\Recommender\BOOK-RECOMMENDER-main\BookDataset\Images.csv")
+	books=pd.read_csv(r"C:\Users\Administrator\ShelfScape2.0\Book-Recommendation-Model\Recommender\BookDataset\Books.csv")
+	img=pd.read_csv(r"C:\Users\Administrator\ShelfScape2.0\Book-Recommendation-Model\Recommender\BookDataset\Images.csv")
 
 	title=[]
 	imgg=[]

@@ -71,7 +71,7 @@ def login():
 @app.route("/recommender",methods=['GET','POST'])
 def recommender():
 	form=BookForm()
-	df=pd.read_csv("C:\Users\Administrator\Recommender\BOOK-RECOMMENDER-main\BookDataset\Books.csv")
+	df=pd.read_csv(r"C:\Users\Administrator\ShelfScape2.0\Book-Recommendation-Model\Recommender\BookDataset\Books.csv")
 	if form.validate_on_submit():
 		if form.bookname.data in list(df['Title']):
 			flash(f'Here are the following recommendations for you', 'success')
@@ -102,7 +102,7 @@ def recommender():
 @app.route("/uploadbook",methods=['GET','POST'])
 def uploadbook():
 	form=UploadBook()
-	df=pd.read_csv("C:\Users\Administrator\Recommender\BOOK-RECOMMENDER-main\BookDataset\Books.csv")
+	df=pd.read_csv(r"C:\Users\Administrator\ShelfScape2.0\Book-Recommendation-Model\Recommender\BookDataset\Books.csv")
 	if form.validate_on_submit():
 		flash(f'Book Uploaded Succesfully', 'success')
 		return redirect(url_for('home'))

@@ -70,7 +70,7 @@ def login():
 @app.route("/recommender",methods=['GET','POST'])
 def recommender():
 	form=BookForm()
-	df=pd.read_csv(r"C:\Users\Administrator\Recommender\BOOK-RECOMMENDER-main\BookDataset\Books.csv")
+	df=pd.read_csv(r"C:\Users\Administrator\ShelfScape2.0\Book-Recommendation-Model\Recommender\BookDataset\Books.csv")
 	if form.validate_on_submit():
 		flash(f'Here are the following recommendations for you', 'success')
 		book=form.bookname.data
@@ -88,7 +88,7 @@ def upload(file_name, list_of_elem):
 @login_required
 def uploadbook():
 	form=UploadBook()
-	df=pd.read_csv(r"C:\Users\Administrator\Recommender\BOOK-RECOMMENDER-main\BookDataset\Books.csv")
+	df=pd.read_csv(r"C:\Users\Administrator\ShelfScape2.0\Book-Recommendation-Model\Recommender\BookDataset\Books.csv")
 	if form.validate_on_submit():
 		i=max(df['index']+1)
 		li=[i,i,form.ISBN.data,form.Title.data,form.Author.data,form.Publisher.data]
@@ -124,7 +124,7 @@ def delete(isbn_num,file_name):
 def deletebook():
 	form=DeleteBook()
 	if form.validate_on_submit():
-		delete(form.ISBN.data,r"C:\Users\Administrator\Recommender\BOOK-RECOMMENDER-main\BookDataset\Books.csv")
+		delete(form.ISBN.data,r"C:\Users\Administrator\ShelfScape2.0\Book-Recommendation-Model\Recommender\BookDataset\Books.csv")
 		flash(f'Book is Deleted', 'success')
 		return redirect(url_for('home'))
 	return render_template('deletebook.html',title='Delete Book',form=form)
